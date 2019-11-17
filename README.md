@@ -1,4 +1,4 @@
-# ArtificialNeuralNetwork
+# ArtificialNeuralNetwork with PyTorch
 
 ### Artificial neural network CPU and GPU versions.
 
