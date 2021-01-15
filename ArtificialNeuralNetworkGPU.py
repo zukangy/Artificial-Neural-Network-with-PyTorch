@@ -6,14 +6,18 @@ import torchvision.transforms as transforms
 
 
 class NeuralNet(torch.nn.Module):
-    """Artificial Neural Network
-    ____Version 1.0____ """
+    """
+    Artificial Neural Network
+    ____Version 1.0____
+    """
 
     def __init__(self, params, activation_functions):
         """
-		params params: a list object specifying the dimension of each layers, shape=[n_features, ..., n_calsses]
-		params activation_functions: a list object specifying the activation functions, length = len(params-2)
-    	"""
+        :param params: (list) specifying the dimension of each layers,
+        shape=[n_features, # of nodes in each layer..., n_classes]
+        :param activation_functions: a list object specifying the activation functions,
+        length = len(params-2)
+        """
         super(NeuralNet, self).__init__()
         self.params = params
         self.activation_functions = []
@@ -28,15 +32,11 @@ class NeuralNet(torch.nn.Module):
             self.activation_functions.append(eval('self.activation_func_{}'.format(i)))
 
     def forward(self, x):
-        """Backpropagation
-
-    	params x: torch tensor, shape=(n_samples, n_features)
-    	params y: torch tensor, shape=(n_samples,)
-    	params iterations: int, number of iterations, default 1000
-    	params eta: float, learning rate for gradient descent, default 1e-3
-    	params optimizer: str, specify an optimizer for parameter updates, defaul Adam
-    	params print_loss: boolean, if True, print loss and training accuracy, default False
-    	"""
+        """
+        Backpropagation
+        :param x: (torch tensor) shape=(n_samples, n_features)
+        :return:
+        """
         z = x
         for i in range(len(self.activation_functions)):
             z = self.layers[i](z)
@@ -44,6 +44,14 @@ class NeuralNet(torch.nn.Module):
         return self.layers[-1](z)
 
     def fit(self, x, y, iterations=1000, eta=1e-3, optimizer="Adam", print_loss=False):
+        """
+        :param x: (torch tensor) shape=(n_samples, n_features)
+        :param y: torch tensor, shape=(n_samples,)
+        :param iterations: int, number of iterations, default 1000
+        :param eta: float, learning rate for gradient descent, default 1e-3
+        :param optimizer: str, specify an optimizer for parameter updates, defaul Adam
+        :param print_loss: boolean, if True, print loss and training accuracy, default False
+        """
         optimizer = eval('torch.optim.' + optimizer)
         optimizer = optimizer(self.parameters(), lr=eta)
         criterion = torch.nn.CrossEntropyLoss()
@@ -67,11 +75,10 @@ class NeuralNet(torch.nn.Module):
 
     def predict(self, x):
         """
-		Make predictions
-		params x: torch tensor, shape=(n_samples, n_features)
-
-    	return: torch tensor, shape=(n_samples,)
-    	"""
+        Make predictions
+        :param x: (torch tensor) shape=(n_samples, n_features)
+        :return: (torch tensor) shape=(n_samples,)
+        """
         z = x
         for i in range(len(self.activation_functions)):
             z = self.layers[i](z)
